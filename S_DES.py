@@ -13,7 +13,7 @@ class S_DES:
     
     def permutation10(self, data: int) -> int:
         bits, result = [0] * 10 ,[0] * 10
-        ans:int = 0
+        value:int = 0
         for i in range(10):
             bits[i] = 1 if data & (1 << i) else 0
         bits = bits[::-1]
@@ -21,12 +21,12 @@ class S_DES:
             result[i] = bits[self.P10[i]-1]
         result = result[::-1]
         for i in range(10):
-            ans += result[i] << i 
-        return ans
+            value += result[i] << i 
+        return value
 
     def permutation8(self, data: int) -> int:
         bits, result = [0] * 10 ,[0] * 10
-        ans:int = 0
+        value:int = 0
         for i in range(10):
             bits[i] = 1 if data & (1 << i) else 0
         bits = bits[::-1]
@@ -34,8 +34,8 @@ class S_DES:
             result[i] = bits[self.P8[i]-1]
         result = result[7::-1]
         for i in range(8):
-            ans += result[i] << i 
-        return ans
+            value += result[i] << i 
+        return value
     
 
     def round_shift(self, data: int, r: int) -> int:
@@ -94,3 +94,9 @@ class S_DES:
             list_binary_string[i] = list_binary_string[i][0]
         return int("".join(list_binary_string), 2)
 
+    def split_8bits_block(self, data: int) -> tuple[int, int]:
+        LE = (data >> 4) & 0xF
+        RE = (data) & 0xF
+        return (LE, RE)
+    
+    
