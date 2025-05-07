@@ -16,17 +16,20 @@ class S_DES:
             [2, 1, 0, 3]
         ]
         self.permutation_table = [2, 6, 3, 1, 4, 8, 5, 7]
-        self.final_permutation_table = [4, 1, 3, 5, 7, 2, 8, 6]
+        self.inverse_permutation_table = [4, 1, 3, 5, 7, 2, 8, 6]
         
         self.K1, self.K2 = self.generate_keys()
 
     def encrypt(self, data):
         data= self.initial_permutation(data)
         
-        data= self.function(data, self.K1)
+        data= self.function_k(data, self.K1)
         data= self.sw(data)
-        data= self.function(data, self.K2)
-        data= self.final_permutation(data)
+
+        data= self.function_k(data, self.K2)
+        data= self.inverse_permutation(data)
+        print(bin(data))
+
         return data
 
 
@@ -88,7 +91,18 @@ class S_DES:
             result[i] = list_binary_string[self.permutation_table[i]-1]
         
         return int("".join(result), 2)
+
     
+    def inverse_permutation(self, data:int)->int:
+        binary_string = bin(data)[2:]
+        list_binary_string = list(binary_string.zfill(8))
+        result = ['0'] * 8
+        for i in range(len(list_binary_string)):
+            result[i] = list_binary_string[self.inverse_permutation_table[i]-1]
+        
+        return int("".join(result), 2)
+
+
     def expanded_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(4))
@@ -104,22 +118,12 @@ class S_DES:
 
         return int("".join(ans), 2)
 
-    def final_permutation(self, data:int)->int:
-        binary_string = bin(data)[2:]
-        list_binary_string = list(binary_string.zfill(8))
-        for i in range(len(list_binary_string)):
-            list_binary_string[i] = (list_binary_string[i], self.final_permutation_table[i])
-        list_binary_string.sort(key=lambda x: x[1])
-        for i in range(len(list_binary_string)):
-            list_binary_string[i] = list_binary_string[i][0]
-        return int("".join(list_binary_string), 2)
-
     def split_8bits_block(self, data: int) -> tuple[int, int]:
         LE = (data >> 4) & 0xF
         RE = (data) & 0xF
         return (LE, RE)
     
-    def p4(self,data:int)->int:
+    def permutation4(self,data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(4))
         permutation_table = [2, 4, 3, 1]
@@ -148,7 +152,7 @@ class S_DES:
         s0= self.convert_with_S_box(le, self.S0)
         s1= self.convert_with_S_box(re, self.S1)
         new_data= (s0 << 2) + s1
-        new_data= self.p4(new_data)
+        new_data= self.permutation4(new_data)
         new_data= LE ^new_data
         new_data = (new_data<<4) | RE
         
