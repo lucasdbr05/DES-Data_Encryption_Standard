@@ -22,6 +22,8 @@ class S_DES:
 
     def encrypt(self, data):
         data= self.initial_permutation(data)
+        print(bin(data)[2:].zfill(8))
+        return
         data= self.function(data, self.K1)
         data= self.sw(data)
         data= self.function(data, self.K2)
@@ -82,12 +84,11 @@ class S_DES:
     def initial_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
+        result = ['0'] * 8
         for i in range(len(list_binary_string)):
-            list_binary_string[i] = (list_binary_string[i], self.permutation_table[i])
-        list_binary_string.sort(key=lambda x: x[1])
-        for i in range(len(list_binary_string)):
-            list_binary_string[i] = list_binary_string[i][0]
-        return int("".join(list_binary_string), 2)
+            result[i] = list_binary_string[self.permutation_table[i]-1]
+        
+        return int("".join(result), 2)
     
     def expanded_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
