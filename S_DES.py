@@ -132,8 +132,20 @@ class S_DES:
         return int("".join(temp_list), 2)
 
     def function (self, data:int, key:int)-> int:
-        new_data= self.expanded_permutation(data)
-
+        new_data= self.split_8bits_block(data)
+        le, re = new_data[0], new_data[1]
+        new_data_left= self.expanded_permutation(le)
+        new_data_right= self.expanded_permutation(re)
+        new_data= new_data_left<<4 + new_data_right
+        new_data= new_data ^ key
+        le,re= self.split_8bits_block(new_data)
+        le= self.convert_with_S_box(le, self.S0)
+        re= self.convert_with_S_box(re, self.S1)
+        le= self.p4(le)
+        re= self.p4(re)
+        new_data= le ^ re
+        new_data= re<<4+new_data
+        new_data= self.convert_with_S_box(new_data, self.S0)
 
     def convert_with_S_box(self, data: int, box: list[list[int]]) -> int:
         row = ((data>>2) & 0b10) | (data & 0b1)
