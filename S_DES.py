@@ -112,3 +112,21 @@ class S_DES:
         RE = (data) & 0xF
         return (LE, RE)
     
+    def p4(self,data:int)->int:
+        binary_string = bin(data)[2:]
+        list_binary_string = list(binary_string.zfill(4))
+        permutation_table = [2, 4, 3, 1]
+        for i in range(len(list_binary_string)):
+            list_binary_string[i] = (list_binary_string[i], permutation_table[i])
+        list_binary_string.sort(key=lambda x: x[1])
+        for i in range(len(list_binary_string)):
+            list_binary_string[i] = list_binary_string[i][0]
+        return int("".join(list_binary_string), 2)
+    
+    def sw(self, data:int)-> int:
+        binary_string = bin(data)[2:]
+        list_binary_string = list(binary_string.zfill(8))
+        temp_list= list_binary_string[4:]
+        for i in range (4):
+            temp_list.append(list_binary_string[i])
+        return int("".join(temp_list), 2)
