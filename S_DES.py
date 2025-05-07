@@ -3,6 +3,19 @@ class S_DES:
         self.__key = key
         self.P10 = [3, 5, 2, 7, 4, 10, 1, 9, 8, 6]
         self.P8 = [6, 3, 7, 4, 8, 5, 10, 9]
+        self.S0 = [
+            [1, 0, 3, 2],
+            [3, 2, 1, 0],
+            [0, 2, 1, 3],
+            [3, 1, 3, 2]
+        ]
+        self.S1 = [
+            [0, 1, 2, 3],
+            [2, 0, 1, 3],
+            [3, 0, 1, 0],
+            [2, 1, 0, 3]
+        ]
+        
         self.K1, self.K2 = self.generate_keys()
 
     def encrypt(self, data):
@@ -98,5 +111,4 @@ class S_DES:
         LE = (data >> 4) & 0xF
         RE = (data) & 0xF
         return (LE, RE)
-    
     
