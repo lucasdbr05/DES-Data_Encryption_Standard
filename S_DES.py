@@ -21,7 +21,13 @@ class S_DES:
         self.K1, self.K2 = self.generate_keys()
 
     def encrypt(self, data):
-        pass 
+        data= self.initial_permutation(data)
+        data= self.function(data, self.K1)
+        data= self.sw(data)
+        data= self.function(data, self.K2)
+        data= self.final_permutation(data)
+        return data
+
 
     def decrypt(self, data):
         pass 
@@ -85,8 +91,8 @@ class S_DES:
     
     def expanded_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
+        list_binary_string = list(binary_string.zfill(4))
         ans = [0]*8
-        list_binary_string = list(binary_string)
         ans[0] = list_binary_string[3]
         ans[1] = list_binary_string[0]
         ans[2] = list_binary_string[1]
@@ -146,10 +152,10 @@ class S_DES:
         new_data= le ^ re
         new_data= re<<4+new_data
         new_data= self.convert_with_S_box(new_data, self.S0)
+        return new_data
 
     def convert_with_S_box(self, data: int, box: list[list[int]]) -> int:
         row = ((data>>2) & 0b10) | (data & 0b1)
         col = ((data & 0b0110) >>1 )
         return box[row][col]
-    
     
