@@ -15,6 +15,8 @@ class S_DES:
             [3, 0, 1, 0],
             [2, 1, 0, 3]
         ]
+        self.permutation_table = [2, 6, 3, 1, 4, 8, 5, 7]
+        self.final_permutation_table = [4, 1, 3, 5, 7, 2, 8, 6]
         
         self.K1, self.K2 = self.generate_keys()
 
@@ -74,9 +76,8 @@ class S_DES:
     def initial_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
-        permutation_table = [2, 6, 3, 1, 4, 8, 5, 7]
         for i in range(len(list_binary_string)):
-            list_binary_string[i] = (list_binary_string[i], permutation_table[i])
+            list_binary_string[i] = (list_binary_string[i], self.permutation_table[i])
         list_binary_string.sort(key=lambda x: x[1])
         for i in range(len(list_binary_string)):
             list_binary_string[i] = list_binary_string[i][0]
@@ -99,9 +100,8 @@ class S_DES:
     def final_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
-        permutation_table = [4, 1, 3, 5, 7, 2, 8, 6]
         for i in range(len(list_binary_string)):
-            list_binary_string[i] = (list_binary_string[i], permutation_table[i])
+            list_binary_string[i] = (list_binary_string[i], self.final_permutation_table[i])
         list_binary_string.sort(key=lambda x: x[1])
         for i in range(len(list_binary_string)):
             list_binary_string[i] = list_binary_string[i][0]
@@ -130,3 +130,6 @@ class S_DES:
         for i in range (4):
             temp_list.append(list_binary_string[i])
         return int("".join(temp_list), 2)
+
+    def function (self, data:int, key:int)-> int:
+        new_data= self.expanded_permutation(data)
