@@ -133,3 +133,11 @@ class S_DES:
 
     def function (self, data:int, key:int)-> int:
         new_data= self.expanded_permutation(data)
+
+
+    def convert_with_S_box(self, data: int, box: list[list[int]]) -> int:
+        row = ((data>>2) & 0b10) | (data & 0b1)
+        col = ((data & 0b0110) >>1 )
+        return box[row][col]
+    
+    
