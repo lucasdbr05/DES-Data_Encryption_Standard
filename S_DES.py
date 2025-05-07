@@ -28,14 +28,22 @@ class S_DES:
 
         data= self.function_k(data, self.K2)
         data= self.inverse_permutation(data)
-        print(bin(data))
-
+        
         return data
 
 
-    def decrypt(self, data):
-        pass 
-    
+    def decrypt(self, data:int):
+        data= self.initial_permutation(data)
+        
+        data= self.function_k(data, self.K2)
+        data= self.sw(data)
+
+        data= self.function_k(data, self.K1)
+        data= self.inverse_permutation(data)
+        
+        return data
+        
+
     def permutation10(self, data: int) -> int:
         bits, result = [0] * 10 ,[0] * 10
         value:int = 0
