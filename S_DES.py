@@ -22,8 +22,7 @@ class S_DES:
 
     def encrypt(self, data):
         data= self.initial_permutation(data)
-        print(bin(data)[2:].zfill(8))
-        return
+        
         data= self.function(data, self.K1)
         data= self.sw(data)
         data= self.function(data, self.K2)
@@ -102,6 +101,7 @@ class S_DES:
         ans[5] = list_binary_string[2]
         ans[6] = list_binary_string[3]
         ans[7] = list_binary_string[0]
+
         return int("".join(ans), 2)
 
     def final_permutation(self, data:int)->int:
@@ -138,21 +138,20 @@ class S_DES:
             temp_list.append(list_binary_string[i])
         return int("".join(temp_list), 2)
 
-    def function (self, data:int, key:int)-> int:
-        new_data= self.split_8bits_block(data)
-        le, re = new_data[0], new_data[1]
-        new_data_left= self.expanded_permutation(le)
-        new_data_right= self.expanded_permutation(re)
-        new_data= new_data_left<<4 + new_data_right
-        new_data= new_data ^ key
-        le,re= self.split_8bits_block(new_data)
-        le= self.convert_with_S_box(le, self.S0)
-        re= self.convert_with_S_box(re, self.S1)
-        le= self.p4(le)
-        re= self.p4(re)
-        new_data= le ^ re
-        new_data= re<<4+new_data
-        new_data= self.convert_with_S_box(new_data, self.S0)
+    def function_k(self, data:int, key:int)-> int:
+        LE, RE = self.split_8bits_block(data)
+        new_data_left= self.expanded_permutation(LE)
+        new_data_right= self.expanded_permutation(RE)
+        new_data_right ^= key
+        
+        le,re= self.split_8bits_block(new_data_right)
+        s0= self.convert_with_S_box(le, self.S0)
+        s1= self.convert_with_S_box(re, self.S1)
+        new_data= (s0 << 2) + s1
+        new_data= self.p4(new_data)
+        new_data= LE ^new_data
+        new_data = (new_data<<4) | RE
+        
         return new_data
 
     def convert_with_S_box(self, data: int, box: list[list[int]]) -> int:
