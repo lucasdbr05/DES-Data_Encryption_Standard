@@ -25,7 +25,7 @@ class S_DES:
         data= self.initial_permutation(data)
         
         data= self.function_k(data, self.K1)
-        data= self.sw(data)
+        data= self.switch(data)
 
         data= self.function_k(data, self.K2)
         data= self.inverse_permutation(data)
@@ -37,7 +37,7 @@ class S_DES:
         data= self.initial_permutation(data)
         
         data= self.function_k(data, self.K2)
-        data= self.sw(data)
+        data= self.switch(data)
 
         data= self.function_k(data, self.K1)
         data= self.inverse_permutation(data)
@@ -80,7 +80,6 @@ class S_DES:
 
     def generate_keys(self) -> tuple[int, int]:
         data = self.permutation10(self.__key)
-
         le, re = (data>>5 & 0b11111), (data & 0b11111)
         le, re = self.round_shift(le, 1), self.round_shift(re, 1)
 
@@ -147,7 +146,7 @@ class S_DES:
         return int("".join(list_binary_string), base=2)
     
 
-    def sw(self, data:int)-> int:
+    def switch(self, data:int)-> int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
         temp_list= list_binary_string[4:]
