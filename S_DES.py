@@ -3,6 +3,7 @@ class S_DES:
         self.__key = key
         self.P10 = [3, 5, 2, 7, 4, 10, 1, 9, 8, 6]
         self.P8 = [6, 3, 7, 4, 8, 5, 10, 9]
+        self.P4 = [2, 4, 3, 1]
         self.S0 = [
             [1, 0, 3, 2],
             [3, 2, 1, 0],
@@ -138,9 +139,8 @@ class S_DES:
     def permutation4(self,data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(4))
-        permutation_table = [2, 4, 3, 1]
         for i in range(len(list_binary_string)):
-            list_binary_string[i] = (list_binary_string[i], permutation_table[i])
+            list_binary_string[i] = (list_binary_string[i], self.P4[i])
         list_binary_string.sort(key=lambda x: x[1])
         for i in range(len(list_binary_string)):
             list_binary_string[i] = list_binary_string[i][0]
