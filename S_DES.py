@@ -76,6 +76,7 @@ class S_DES:
         data = data & 0b11111
         return data   
     
+
     def generate_keys(self) -> tuple[int, int]:
         data = self.permutation10(self.__key)
 
@@ -91,6 +92,7 @@ class S_DES:
         K2 = self.permutation8(data)
         return (K1, K2)
     
+
     def initial_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
@@ -98,9 +100,9 @@ class S_DES:
         for i in range(len(list_binary_string)):
             result[i] = list_binary_string[self.permutation_table[i]-1]
         
-        return int("".join(result), 2)
+        return int("".join(result), base=2)
 
-    
+
     def inverse_permutation(self, data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
@@ -108,7 +110,7 @@ class S_DES:
         for i in range(len(list_binary_string)):
             result[i] = list_binary_string[self.inverse_permutation_table[i]-1]
         
-        return int("".join(result), 2)
+        return int("".join(result), base=2)
 
 
     def expanded_permutation(self, data:int)->int:
@@ -124,13 +126,15 @@ class S_DES:
         ans[6] = list_binary_string[3]
         ans[7] = list_binary_string[0]
 
-        return int("".join(ans), 2)
+        return int("".join(ans), base=2)
+
 
     def split_8bits_block(self, data: int) -> tuple[int, int]:
         LE = (data >> 4) & 0xF
         RE = (data) & 0xF
         return (LE, RE)
     
+
     def permutation4(self,data:int)->int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(4))
@@ -140,15 +144,17 @@ class S_DES:
         list_binary_string.sort(key=lambda x: x[1])
         for i in range(len(list_binary_string)):
             list_binary_string[i] = list_binary_string[i][0]
-        return int("".join(list_binary_string), 2)
+        return int("".join(list_binary_string), base=2)
     
+
     def sw(self, data:int)-> int:
         binary_string = bin(data)[2:]
         list_binary_string = list(binary_string.zfill(8))
         temp_list= list_binary_string[4:]
         for i in range (4):
             temp_list.append(list_binary_string[i])
-        return int("".join(temp_list), 2)
+        return int("".join(temp_list), base=2)
+
 
     def function_k(self, data:int, key:int)-> int:
         LE, RE = self.split_8bits_block(data)
@@ -165,6 +171,7 @@ class S_DES:
         new_data = (new_data<<4) | RE
         
         return new_data
+
 
     def convert_with_S_box(self, data: int, box: list[list[int]]) -> int:
         row = ((data>>2) & 0b10) | (data & 0b1)
