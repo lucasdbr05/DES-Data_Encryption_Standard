@@ -21,11 +21,17 @@ S-DES is a symmetric-key block cipher that operates on 8-bit blocks of data usin
   ```bash
   python main.py
    ```
-
- **Usage:**
-   - The program will display a menu with options for encryption and decryption using S-DES, as well as ECB and CBC modes.
-   - You can toggle between user input and default input files by pressing `T`.
+**Usage:**
+   - When you run the program, a menu will be displayed with the following options:
+     - **1E**: Encrypt a single 8-bit block using S-DES.
+     - **1D**: Decrypt a single 8-bit block using S-DES.
+     - **2E**: Encrypt a binary message using S-DES in ECB mode.
+     - **2D**: Decrypt a binary message using S-DES in ECB mode.
+     - **3E**: Encrypt a binary message using S-DES in CBC mode (with a fixed IV).
+     - **3D**: Decrypt a binary message using S-DES in CBC mode (with a fixed IV).
+   - You can toggle between user input and default input files by pressing `T` at the menu.
    - To stop the program, enter `0`.
+   - After each operation, press `y` to return to the menu.
 
 ---
 
