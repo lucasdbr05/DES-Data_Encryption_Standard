@@ -43,17 +43,25 @@ def do_command(data: str, from_user: bool) -> None:
     elif (data == "3E"):
         Logger.print_data("Type S-DES key (binary):")
         key = int(get_input(from_user, "inputs/3_E_key.txt"), base=2)
+        iv = "01010101"
+        Logger.print_data("Initialization vector:")
+        Logger.print_data(iv)
+        iv = int("01010101", base=2)
         Logger.print_data("Type data to be encrypted (binary):")
         text = get_input(from_user, "inputs/3_E_text.txt")
-        iv = int("01010101", base=2)
+
         text = encrypt_sdes_cbc(text, key, iv)
         Logger.print_data(int(text, base=2), "Final ECB operation message encryption", True)
     elif (data == "3D"):
         Logger.print_data("Type S-DES key (binary):")
         key = int(get_input(from_user, "inputs/3_D_key.txt"), base=2)
+        iv = "01010101"
+        Logger.print_data("Initialization vector:")
+        Logger.print_data(iv)
+        iv = int("01010101", base=2)
         Logger.print_data("Type data to be decrypted (binary):")
         text = get_input(from_user, "inputs/3_D_text.txt")
-        iv = int("01010101", base=2)
+
         text = decrypt_sdes_cbc(text, key, iv)
         Logger.print_data(int(text, base=2), "Final ECB operation message decryption", True)
     else:
