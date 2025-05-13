@@ -21,7 +21,7 @@ class S_DES:
         
         self.K1, self.K2 = self.generate_keys()
 
-    def encrypt(self, data):
+    def encrypt(self, data: int):
         data= self.initial_permutation(data)
         
         data= self.function_k(data, self.K1)

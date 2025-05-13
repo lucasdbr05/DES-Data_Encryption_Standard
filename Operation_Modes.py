@@ -6,7 +6,8 @@ def format_bin (x: str) -> str:
     return bin(x)[2:].zfill(8)
 
 def padding(x:str) -> str:
-    return x + ('0' * (8-(len(x)%8))%8)
+    padding_size = (8-(len(x)%8))%8
+    return x + ('0' * padding_size if padding_size else '')
 
 def encrypt_sdes_ecb(text: str, key: int) -> str:
     """
@@ -19,7 +20,7 @@ def encrypt_sdes_ecb(text: str, key: int) -> str:
     """
     # Initialize the S-DES instance with the provided key
     s_des = S_DES(key)
-
+    text = padding(text)
     blocks = []
     for i in range(0, len(text), 8):
         block = int(text[i: i+8], base=2)
@@ -42,7 +43,7 @@ def decrypt_sdes_ecb(text: str, key: int) -> str:
     """
     # Initialize the S-DES instance with the provided key
     s_des = S_DES(key)
-    x = padding(text)
+    text = padding(text)
     blocks = []
 
     for i in range(0, len(text), 8):
@@ -68,6 +69,7 @@ def encrypt_sdes_cbc(text: str, key: int, iv: int) -> str:
     s_des = S_DES(key)
     next_xor = iv 
 
+    text = padding(text)
     blocks = []
     for i in range(0, len(text), 8):
         block = int(text[i: i+8], base=2)
@@ -98,6 +100,8 @@ def decrypt_sdes_cbc(text: str, key: int, iv: int) -> str:
 
     blocks = []
     next_xor = iv
+    text = padding(text)
+    
     for i in range(0, len(text), 8):
         block = int(text[i: i+8], base=2)
         
