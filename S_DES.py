@@ -71,6 +71,19 @@ class S_DES:
             value += result[i] << i 
         return value
     
+    
+    def permutation4(self, data: int) -> int:
+        bits, result = [0] * 4 ,[0] * 4
+        value:int = 0
+        for i in range(4):
+            bits[i] = 1 if data & (1 << i) else 0
+        bits = bits[::-1]
+        for i in range(4):
+            result[i] = bits[self.P4[i]-1]
+        result = result[::-1]
+        for i in range(4):
+            value += result[i] << i 
+        return value
 
     def round_shift(self, data: int, r: int) -> int:
         data = (data >> (5-r)) + (data << r)
@@ -135,25 +148,8 @@ class S_DES:
         return (LE, RE)
     
 
-    def permutation4(self,data:int)->int:
-        binary_string = bin(data)[2:]
-        list_binary_string = list(binary_string.zfill(4))
-        for i in range(len(list_binary_string)):
-            list_binary_string[i] = (list_binary_string[i], self.P4[i])
-        list_binary_string.sort(key=lambda x: x[1])
-        for i in range(len(list_binary_string)):
-            list_binary_string[i] = list_binary_string[i][0]
-        return int("".join(list_binary_string), base=2)
-    
-
-    def switch(self, data:int)-> int:
-        binary_string = bin(data)[2:]
-        list_binary_string = list(binary_string.zfill(8))
-        temp_list= list_binary_string[4:]
-        for i in range (4):
-            temp_list.append(list_binary_string[i])
-        return int("".join(temp_list), base=2)
-
+    def switch(self, data: int) -> int:
+        return ((data & 0xF) << 4) | ((data >> 4) & 0xF)
 
     def function_k(self, data:int, key:int)-> int:
         LE, RE = self.split_8bits_block(data)
@@ -166,14 +162,14 @@ class S_DES:
         s1= self.convert_with_S_box(re, self.S1)
         new_data= (s0 << 2) + s1
         new_data= self.permutation4(new_data)
-        new_data= LE ^new_data
+        new_data= LE ^ new_data
         new_data = (new_data<<4) | RE
         
         return new_data
 
 
     def convert_with_S_box(self, data: int, box: list[list[int]]) -> int:
-        row = ((data>>2) & 0b10) | (data & 0b1)
+        row = ((data & 0b1000) >> 2) | (data & 0b1)
         col = ((data & 0b0110) >>1 )
         return box[row][col]
     

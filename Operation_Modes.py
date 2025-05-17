@@ -2,8 +2,9 @@ from S_DES import S_DES
 
 
 
-def format_bin (x: str) -> str:
-    return bin(x)[2:].zfill(8)
+def format_bin(x: int) -> str:
+    block =  bin(x)[2:].zfill(8)
+    return block
 
 def padding(x:str) -> str:
     padding_size = (8-(len(x)%8))%8
@@ -27,7 +28,6 @@ def encrypt_sdes_ecb(text: str, key: int) -> str:
         # Encrypt each block using S-DES
         data = s_des.encrypt(block)
         blocks.append(data)
-
     # Combine all encrypted blocks into a single binary string
     return "".join(format_bin(block) for block in blocks)
 
