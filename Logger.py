@@ -1,3 +1,4 @@
+from pprint import pprint
 class Logger:
     @staticmethod
     def start(is_from_user:bool) -> None:
@@ -14,19 +15,19 @@ class Logger:
         
 
     @staticmethod
-    def print_data(data:str, title:str =  None, _bin = False) -> None:
+    def print_data(data:str, title:str =  None, _bin = False, _bin_len= None) -> None:
         if(title): print(title)
         if(_bin):
-            data = bin(data)[2:]
-            size  = ((len(data) //8) + (1 if len(data)%8 > 0 else 0)) * 8
-            data = data.zfill(size)
-        print(data)
-
-        
-
-    
-
-        
-
-    
+            numeric_data = data
+            binary = bin(numeric_data)[2:]
+            binary_size  = ((len(binary) //8) + (1 if len(binary)%8 > 0 else 0)) * 8
+            binary_size = _bin_len if _bin_len else binary_size
+            data =  {
+                "binary": binary.zfill(binary_size),
+                "hexadecimal": hex(numeric_data)[2:].zfill(binary_size//4)
+            }
+            pprint(data)
+            print()
+        else:
+            print(data)
     

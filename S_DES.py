@@ -1,3 +1,5 @@
+from Logger import Logger
+
 class S_DES:
     def __init__(self, key: int):
         self.__key = key
@@ -22,25 +24,41 @@ class S_DES:
         self.K1, self.K2 = self.generate_keys()
 
     def encrypt(self, data: int):
-        data= self.initial_permutation(data)
-        
-        data= self.function_k(data, self.K1)
-        data= self.switch(data)
+        Logger.print_data(self.K1, "K1", True)
+        Logger.print_data(self.K2, "K2", True)
 
-        data= self.function_k(data, self.K2)
+        data= self.initial_permutation(data)
+        Logger.print_data(data, "Initial Permutation", True)
+
+        data= self.complex_function(data, self.K1)
+        Logger.print_data(data, "Complex Function - Round 1", True)
+        data= self.switch(data)
+        Logger.print_data(data, "Switch", True)
+
+        data= self.complex_function(data, self.K2)
+        Logger.print_data(data, "Complex Function - Round 2", True)
         data= self.inverse_permutation(data)
+        Logger.print_data(data, "Inverse Permutation", True)
         
         return data
 
 
     def decrypt(self, data:int):
-        data= self.initial_permutation(data)
-        
-        data= self.function_k(data, self.K2)
-        data= self.switch(data)
+        Logger.print_data(self.K1, "K1", True)
+        Logger.print_data(self.K2, "K2", True)
 
-        data= self.function_k(data, self.K1)
+        data= self.initial_permutation(data)
+        Logger.print_data(data, "Initial Permutation", True)
+        
+        data= self.complex_function(data, self.K2)
+        Logger.print_data(data, "Complex Function - Round 1 (using K2)", True)
+        data= self.switch(data)
+        Logger.print_data(data, "Switch", True)
+
+        data= self.complex_function(data, self.K1)
+        Logger.print_data(data, "Complex Function - Round 2 (using K1)", True)
         data= self.inverse_permutation(data)
+        Logger.print_data(data, "Inverse Permutation", True)
         
         return data
         
@@ -151,7 +169,7 @@ class S_DES:
     def switch(self, data: int) -> int:
         return ((data & 0xF) << 4) | ((data >> 4) & 0xF)
 
-    def function_k(self, data:int, key:int)-> int:
+    def complex_function(self, data:int, key:int)-> int:
         LE, RE = self.split_8bits_block(data)
         new_data_left= self.expanded_permutation(LE)
         new_data_right= self.expanded_permutation(RE)
